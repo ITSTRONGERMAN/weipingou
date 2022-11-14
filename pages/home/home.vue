@@ -1,12 +1,15 @@
 <template>
 	<view>
+		<view class="search">
+			<MySearch @click.native="goToSearch"></MySearch>
+		</view>
 		<!-- 轮播图区域 -->
 		<swiper :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000" indicator-active-color="#fff"
 			circular>
 			<swiper-item v-for="(item,index) in swiperList" :key="index">
 				<navigator class="swiper-item" :url="'../../subpck/goods_detail/goods_detail?goods_id='+item.goods_id"
 					open-type="navigate">
-					<image :src="item.image_src" >
+					<image :src="item.image_src">
 				</navigator>
 			</swiper-item>
 		</swiper>
@@ -21,6 +24,7 @@
 
 <script>
 	import Floor from '../../components/home/floor.vue'
+	import MySearch from '../../components/mysearch/mysearch.vue'
 	export default {
 		data() {
 			return {
@@ -33,7 +37,8 @@
 			};
 		},
 		components: {
-			Floor
+			Floor,
+			MySearch
 		},
 		onLoad() {
 			this.getSwiperList(),
@@ -74,18 +79,29 @@
 				this.floorList = res.message
 			},
 			goTo(name) {
-				console.log(name)
 				if (name === '分类') {
 					uni.switchTab({
 						url: '/pages/cate/cate'
 					})
 				}
+			},
+			goToSearch(){
+				uni.navigateTo({
+					url:'/subpck/search/search'
+				})
 			}
 		}
 	}
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
+	.search {
+		width: 100%;
+		position: sticky;
+		top: 0;
+		z-index: 999;
+	}
+
 	.swiper-item {
 		height: 330rpx;
 

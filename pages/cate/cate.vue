@@ -1,17 +1,21 @@
 <template>
 	<view class="cate">
+		<MySearch @click.native="goToSearch"></MySearch>
 		<view class="scroll-view-container">
 			<view class="left">
 				<scroll-view class="left-scroll-view" scroll-y :style="{height: windowHeight+'px'}">
 					<block v-for="item,index in cateList" :key="item.cat_id">
 						<view :class="['left-scroll-view-item',index===active?'active':'']" @click="onClick(index)">
-							{{item.cat_name}}</view>
+							{{item.cat_name}}
+						</view>
 					</block>
 				</scroll-view>
 			</view>
 			<view class="right">
-				<scroll-view class="right-scroll-view" scroll-y :style="{height: windowHeight+'px'}" :scroll-top="scrollTop">
-					<CateLv2 v-for="(item,index) in cateList2" :key="index" :title="item.cat_name" :cateLv3List="item.children"></CateLv2>
+				<scroll-view class="right-scroll-view" scroll-y :style="{height: windowHeight+'px'}"
+					:scroll-top="scrollTop">
+					<CateLv2 v-for="(item,index) in cateList2" :key="index" :title="item.cat_name"
+						:cateLv3List="item.children"></CateLv2>
 				</scroll-view>
 			</view>
 		</view>
@@ -20,6 +24,7 @@
 
 <script>
 	import CateLv2 from '../../components/cate/catelv2.vue'
+	import MySearch from '../../components/mysearch/mysearch.vue'
 	export default {
 		data() {
 			return {
@@ -30,15 +35,16 @@
 				// 二级分类
 				cateList2: [],
 				active: 0,
-				scrollTop:0
+				scrollTop: 0
 			};
 		},
 		components: {
-			CateLv2
+			CateLv2,
+			MySearch
 		},
 		onLoad() {
 			let systemInfo = uni.getSystemInfoSync()
-			this.windowHeight = systemInfo.windowHeight
+			this.windowHeight = systemInfo.windowHeight - 50
 			this.getCateList()
 		},
 		methods: {
@@ -55,17 +61,24 @@
 			onClick(index) {
 				this.active = index
 				this.cateList2 = this.cateList[index].children
-				this.scrollTop=this.scrollTop===0?1:0
+				this.scrollTop = this.scrollTop === 0 ? 1 : 0
 			},
+			goToSearch() {
+				uni.navigateTo({
+					url: '/subpck/search/search'
+				})
+			}
 		}
 	}
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 	.scroll-view-container {
 		display: flex;
+
 		.left-scroll-view {
 			width: 120px;
+
 			.left-scroll-view-item {
 				background-color: #f7f7f7;
 				line-height: 60px;
@@ -90,8 +103,9 @@
 				}
 			}
 		}
-		.right{
-			flex:1
+
+		.right {
+			flex: 1
 		}
 	}
 </style>
