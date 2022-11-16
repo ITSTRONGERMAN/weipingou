@@ -24,12 +24,13 @@
 		</view>
 		<rich-text :nodes="goodDetail.goods_introduce"></rich-text>
 		<view class="goods-nav">
-			<uni-goods-nav :fill="true" :options="options" :button-group="buttonGroup" @click="onLeftClick" @buttonClick="onRightClick" />
+			<uni-goods-nav :fill="true" :options="options" :button-group="buttonGroup" @click="onLeftClick" @buttonClick="onRightBtnClick" />
 		</view>
 	</view>
 </template>
 
 <script>
+	import {mapGetters,mapMutations} from 'vuex'
 	export default {
 		data() {
 			return {
@@ -42,7 +43,7 @@
 						}, {
 							icon: 'cart',
 							text: '购物车',
-							info: 2
+							info: 0
 						}],
 					    buttonGroup: [{
 					      text: '加入购物车',
@@ -57,10 +58,25 @@
 					    ]
 					  }
 		},
+		computed:{
+			...mapGetters('cart',['cartCount'])
+		},
+		watch:{
+			cartCount:{
+				immediate:true,
+				handler(newVal){
+					this.options[1].info=newVal
+				}
+			}
+		},
 		onLoad({goods_id}) {
 			this.getGoodDetailData(goods_id)
 		},
 		methods:{
+		...mapMutations({
+			addCart:'cart/addCart',
+			saveToStorage:'cart/saveToStorage'
+		}),
 		async getGoodDetailData(goods_id){
 				let {data:res}=await uni.$http.get('/goods/detail?goods_id='+goods_id)
 				if(res.meta.status!==200) return uni.$showMsg()
@@ -80,8 +96,22 @@
 					})
 				}
 			},
-			onRightClick(index,context){
-				console.log(index,context);
+			onRightBtnClick({content}){
+				if(content.text==='加入购物车'){
+					const goods={
+						goods_id:this.goodDetail.goods_id,
+						goods_name:this.goodDetail.goods_name,
+						goods_price:this.goodDetail.goods_price,
+						goods_count:1,
+						goods_small_logo:this.goodDetail.goods_small_logo,
+						goods_state:false
+					}
+					this.addCart(goods)
+					uni.showToast({
+						title:'加入购物车成功',
+						icon:'success',
+					})
+				}
 			}
 		}
 	}

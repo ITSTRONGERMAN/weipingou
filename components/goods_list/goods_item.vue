@@ -29,6 +29,7 @@
 <style lang="less" scoped>
 	.goods-item{
 		display: flex;
+		border-bottom: 1px solid #efefef;
 		margin-bottom: 5px;
 		.left{
 			width: 100px;

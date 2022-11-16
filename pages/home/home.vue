@@ -25,6 +25,7 @@
 <script>
 	import Floor from '../../components/home/floor.vue'
 	import MySearch from '../../components/mysearch/mysearch.vue'
+	import badgeMixIn from '../../mixin/tab-badge.js'
 	export default {
 		data() {
 			return {
@@ -36,6 +37,7 @@
 				floorList: []
 			};
 		},
+		mixins:[badgeMixIn],
 		components: {
 			Floor,
 			MySearch
