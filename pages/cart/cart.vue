@@ -1,7 +1,7 @@
 <template>
 	<view class="">
-		<Address></Address>
 		<view class="cart-container" v-if="cartList.length!==0">
+			<Address></Address>
 			<view class="cart-title">
 				<uni-icons type="shop" size="18"></uni-icons>
 				<text class="cart-title-name">购物车</text>
