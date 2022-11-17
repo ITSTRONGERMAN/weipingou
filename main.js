@@ -12,10 +12,15 @@ uni.$showMsg = (title='数据请求失败', duration = 1500) => {
 	})
 }
 $http.baseUrl = 'https://api-hmugo-web.itheima.net/api/public/v1'
-$http.beforeRequest = () => {
+$http.beforeRequest = (option) => {
 	uni.showLoading({
 		title: '数据加载中',
 	})
+	if(option.url.indexOf('/my/')!==-1){
+		option.header={
+			Authorization:store.state.userInfo.token
+		}
+	}
 }
 $http.afterRequest = () => {
 	uni.hideLoading()

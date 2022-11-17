@@ -6,17 +6,22 @@
 		<view class="amount-box">
 			合计：<text class="amount">￥{{totalCost}}</text>
 		</view>
-		<view class="settle-btn">
+		<view class="settle-btn" @click="goToSettle">
 			结算({{checkoutCount}})
 		</view>
 	</view>
 </template>
 
 <script>
-	import {mapGetters,mapMutations} from 'vuex'
+	import {mapGetters,mapMutations,mapState} from 'vuex'
 	export default {
 		computed:{
 			...mapGetters('cart',['totalCost','cartCount','checkoutCount']),
+			...mapGetters('userInfo',['addressInfo']),
+			...mapState({
+				token:state=>state.userInfo.token,
+				cartList:state=>state.cart.cartList
+			}),
 			isCheckAll(){
 				return this.cartCount===this.checkoutCount
 			}
@@ -27,6 +32,38 @@
 			}),
 			checkAll(){
 				this.changeCartListGoodsState(!this.isCheckAll)
+			},
+			goToSettle(){
+				if(!this.checkoutCount){
+					return uni.$showMsg('请选择要结算的商品')
+				}
+				if(!this.addressInfo){
+					return uni.$showMsg('请选择收货地址')
+				}
+				if(!this.token){
+					 uni.$showMsg('请先登录')
+					 setTimeout(()=>{
+						 uni.switchTab({
+						 	url:'/pages/my/my'
+						 })
+					 },1000)
+					 return
+				}
+				this.payOrder()
+			},
+		async payOrder(){
+				const orderInfo={
+					order_price:0.01,
+					consignee_addr:this.addressInfo,
+					goods:this.cartList.filter(x=>x.goods_state).map(x=>({
+						goods_id:x.goods_id,
+						goods_number:x.goods_count,
+						goods_price:x.goods_price
+					}))
+				}
+			let {data:res}=await uni.$http.post('/my/orders/create',orderInfo)
+			console.log(res);
+			if(res.meta.status!==200)return uni.$showMsg('结算失败')
 			}
 		}
 	}

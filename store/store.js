@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import cart from './cart.js'
-import address from './address.js'
+import userInfo from './userInfo.js'
 Vue.use(Vuex)
 const store=new Vuex.Store({
 	modules:{
 		cart,
-		address
+		userInfo
 	}
 })
 export default store

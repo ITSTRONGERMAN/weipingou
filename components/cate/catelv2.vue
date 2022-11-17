@@ -5,7 +5,7 @@
 		</view>
 		<view class="catelv3-list">
 			<view class="catelv3-box" v-for="item,index in cateLv3List" :key="index" @click="goToGoodsList(item.cat_id)">
-				<image :src="item.cat_icon" mode="heightFix"></image>
+				<image :src="item.cat_icon" lazy-load mode="heightFix"></image>
 				<text>{{item.cat_name}}</text>
 			</view>
 		</view>

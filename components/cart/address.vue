@@ -1,7 +1,7 @@
 <template>
 	<view class="address-container">
 		<view class="address-choose-box" v-if="JSON.stringify(address)==='{}'">
-			<button type="primary" size="mini" class="add-address-btn" @click="chooseAddress">+添加收货地址</button>
+			<button type="primary" size="mini" class="add-address-btn" @click="chooseAddress">添加收货地址</button>
 		</view>
 		<view class="address-info-box" v-else @click="chooseAddress">
 			<view class="row1">
@@ -35,20 +35,19 @@
 	export default {
 		computed:{
 			...mapState({
-				address:state=>state.address.address,
+				address:state=>state.userInfo.address,
 			}),
 			...mapGetters({
-				addressInfo:'address/addressInfo'
+				addressInfo:'userInfo/addressInfo'
 			}),
 		},
 		methods: {
 			...mapMutations({
-				addAddress:'address/addAddress',
+				addAddress:'userInfo/addAddress',
 			}),
 			async chooseAddress() {
 				let [err,success] = await uni.chooseAddress().catch(err=>err)
 				if(err==null&&success.errMsg==='chooseAddress:ok'){
-					this.address=success
 					this.addAddress(success);
 				}
 			}
